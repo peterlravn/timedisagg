@@ -11,7 +11,7 @@ import math
 
 class TempDisagg:
 
-    def __init__(self, conversion, method="chow-lin-maxlog", rho_start=0.5, truncated_rho=0,
+    def __init__(self, conversion, to, method="chow-lin-maxlog", rho_start=0.5, truncated_rho=0,
                  fixed_rho=0.5):
         self.conversion = conversion
         self.rho_start = rho_start
@@ -69,17 +69,24 @@ class TempDisagg:
         return X, y, fr, n_fc, n_bc
 
     def generate_conversion_matrix(self):
-
+        
+        if self.to == "monthly":
+            repeats = 3
+        elif self.to == "quarterly":
+            repeats = 4
+        else:
+            repeats = 12
+        
         if self.conversion ==  "sum":
-            conversion_weights = np.repeat(1, self.fr).reshape((1, self.fr))
+            conversion_weights = np.repeat(1, repeats).reshape((1, repeats))
         elif self.conversion == "average":
-            conversion_weights = (np.repeat(1, self.fr)/self.fr).reshape((1, self.fr))
+            conversion_weights = (np.repeat(1, repeats)/repeats).reshape((1, repeats))
         elif self.conversion == "first":
-            conversion_weights = np.zeros(self.fr).reshape((1, self.fr))
+            conversion_weights = np.zeros(repeats).reshape((1, repeats))
             conversion_weights[0, 0] = 1
         elif self.conversion == "last":
-            conversion_weights = np.zeros(self.fr).reshape((1, self.fr))
-            conversion_weights[0,self.fr-1] = 1
+            conversion_weights = np.zeros(repeats).reshape((1, repeats))
+            conversion_weights[0,repeats-1] = 1
         else:
             sys.exit("Wrong Conversion")
 

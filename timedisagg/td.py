@@ -14,6 +14,7 @@ class TempDisagg:
     def __init__(self, conversion, to, method="chow-lin-maxlog", rho_start=0.5, truncated_rho=0,
                  fixed_rho=0.5):
         self.conversion = conversion
+        self.to = to
         self.rho_start = rho_start
         self.method = method
         self.fixed_rho = fixed_rho
